@@ -28,4 +28,4 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: "Go to folder and pull"
-        run: ssh staging 'cd /var/www/Alby1 && sudo git pull'
+        run: ssh staging 'cd /var/www/questionable && sudo git pull'
