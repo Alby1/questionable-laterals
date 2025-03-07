@@ -1,26 +1,19 @@
 import copy
 from fastapi import FastAPI, Request, WebSocket
-from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.websockets import WebSocketState
 import uvicorn
-import json
 import os
 from dotenv import load_dotenv
-import requests
-import html
-import xml
 import random
 
-import json
-from sqlalchemy.ext.declarative import DeclarativeMeta
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.dialects.mysql import VARCHAR, TINYINT, TEXT, DATETIME, BOOLEAN
+from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer
+from sqlalchemy.dialects.mysql import TEXT
 
 WEBSOCKET_MODE = False
 

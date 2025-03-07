@@ -2,8 +2,6 @@ fastapi
 jinja2
 python-dotenv
 uvicorn
-requests
 sqlalchemy
 sqlalchemy_utils
-pymysql
-gitpython
+pymysqls
