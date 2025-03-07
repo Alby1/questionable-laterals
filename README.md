@@ -10,7 +10,9 @@ This could also be used for any other open ended question riddles, quizzes, ...
 
 ## How?
 Python (fastapi + uvicorn and sqlalchemy) and mysql backend
+
 Pure HTML, CSS and JS frontend.
+
 
 Code probably doesn't look great, frankesteined it from my other projects.
 
