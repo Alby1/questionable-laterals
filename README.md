@@ -16,3 +16,5 @@ Code probably doesn't look great, frankesteined it from my other projects.
 
 ## What now?
 I don't expect anyone to use this in its current state, but I have some modifications in mind i'll add soon™.
+
+The biggest reason for this to exist as a repository on my github is to have actions automatically update the instance on my server.
