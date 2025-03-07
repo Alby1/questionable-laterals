@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Question</title>
+</head>
+<body>
+    <div class="ver">
+        <div class="hor">
+            <h2>Question</h2>
+            <h2>Answer</h2>
+        </div>
+        <div class="hor">
+            <h3>{{ question | safe }}</h3>
+            <h3 id="answer" hidden>{{ answer | safe }}</h3> <h3 id="hidden">hidden</h3>
+        </div>
+        <div class="hor" style="margin-top: 30px;">
+            <button onclick="newquestion()">New question</button>
+            <a href="" id="question_link">Question link</a>
+            <button onclick="toggleanswer()">Show/ hide answer</button>
+        </div>
+        <p id="id" hidden>{{ id | safe }}</p>
+    </div>
+</body>
+<script>
+    let WEBSOCKET_MODE
+    let id = document.getElementById('id').innerHTML
+    let question_link = document.getElementById("question_link")
+    question_link.href = `${location.origin}?id=${id}`
+
+    let is_hidden = true;
+    function toggleanswer() {
+        let hidden = document.getElementById("hidden")
+        let answer = document.getElementById("answer")
+
+        hidden.hidden = is_hidden
+        answer.hidden = !is_hidden
+
+        is_hidden = !is_hidden;
+    }
+
+    function newquestion() {
+        if(WEBSOCKET_MODE) trySendMessage("new question")
+        location.replace('/')
+    }
+
+    async function getData(url, func) {
+        let data = await fetch(url)
+        if(data.status == 200) func(await data.json())
+    }
+
+    let attempts = 0
+    function initWebsocket(url) {
+        attempts++;
+
+        console.log("Trying to initiate connection to WS server...");
+        ws = new WebSocket(url);
+        console.log("Connection try finished.");
+
+        ws.onopen = function() {
+            attempts = 0;
+            console.log("WS connection established.");
+            trySendMessage(JSON.stringify({"status": "successo", "messaggio": "ciao, server"}));
+        }
+
+        ws.onmessage = function(event) {
+            console.log("WS message received:", event.data);
+        }
+
+        ws.onclose = function() {
+            console.log("WS connection closed.");
+
+            console.log(`Retrying WS connection...`);
+            setTimeout(() => {
+                initWebsocket(url);
+            }, attempts < 10 ? 0 : retryTimeMs *= 2);
+        }
+
+        ws.onerror = function(error) {
+            console.log("WS error:", error);
+        }
+    }
+
+    function trySendMessage(message) {
+        if (ws === null) return false;
+        try {
+            ws.send(message);
+            return true;
+        } catch (ex) {
+            console.log(ex);
+            return false;
+        }
+    }
+
+    getData(`${location.href}ws`, (data) => {
+        WEBSOCKET_MODE = data
+    })
+    if(WEBSOCKET_MODE) initWebsocket(`${location.href}ws`)
+</script>
+
+
+
+<style>
+    body {
+        width: 99%;
+    }
+
+    .hor{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: row;
+    }
+
+    .hor * {
+        max-width: 49%;
+    }
+
+    .ver {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+    }
+    
+    button {
+        padding: 5px 10px;
+    }
+</style>
+</html>
